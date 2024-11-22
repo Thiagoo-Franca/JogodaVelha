@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <link rel="stylesheet" href="src/style.css">
+    <script src="src/javascript.js"></script>
+</head>
+<body>
+
+    <header> <!--Placar--->
+
+        <div class="placar">
+            <div id="nome_jogador1">player1</div><div id="score1">0</div>x<div id="score2">0</div><div id="nome_jogador2">player2</div>
+        </div>
+        
+        <h1 id="mostra_vez">Começar</h1> <!--Mostrar de quem é a vez-->
+
+    </header>
+
+
+    <section class="jogo">
+        <div id="coluna1">
+            <div class="posicao" id="um" onclick="jogo.jogada('um')"> </div>
+            <div class="posicao" id="dois" onclick="jogo.jogada('dois')"> </div>
+            <div class="posicao" id="tres" onclick="jogo.jogada('tres')"> </div>
+        </div>
+        <div id="coluna2">
+            <div class="posicao" id="quatro" onclick="jogo.jogada('quatro')"> </div>
+            <div class="posicao" id="cinco" onclick="jogo.jogada('cinco')"> </div>
+            <div class="posicao" id="seis" onclick="jogo.jogada('seis')"> </div>
+        </div>
+        <div id="coluna3">
+            <div class="posicao" id="sete" onclick="(jogo.jogada('sete'))"> </div>
+            <div class="posicao" id="oito" onclick="(jogo.jogada('oito'))"> </div>
+            <div class="posicao" id="nove" onclick="(jogo.jogada('nove'))"> </div>
+        </div>
+    </section>
+
+     
+</body>
+</html>
