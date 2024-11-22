@@ -1,141 +1,174 @@
-let contador = 0;
-let p1 = 0;
-let p2 = 0;
-let vencedor = -1; //0 ou 1
-let vez = 0; // 0 ou 1
-
-function jogada(id) {
-
-    var posicao = document.getElementById(id);
-    var mostrar_vez = document.getElementById("mostra_vez");
-
+class JogoDaVelha {
+    constructor(jogador1, jogador2) {
+        this.contador = 0;
+        this.jogador1 = jogador1;
+        this.jogador2 = jogador2;
+        this.vencedor = 0;
+        this.vez = 1;
+    }
     
-    //é possivel jogar nessa posicao
-    if (posicao.textContent.trim() === ""){
-        if(vez === 0) {
-            posicao.textContent = "O"
-        }
-        else {
-            posicao.textContent = "X"
+    jogada(id) {
+        
+        const posicao = document.getElementById(id);
+        const mostrar_vez = document.getElementById("mostra_vez");
+        
+        if (this.verificarJogadaPossivel(posicao)) {
+            this.verificarVez(posicao);
+            
+            
+            if(this.verificarVencedor() && this.contador < 8)
+                {
+                this.quemGanhou();
             }
-        if(verificarVencedor() && contador < 8)
-        {
-            if(vez === 0) {
-                vencedor = 0;
-                p1 += 1
-                var pontuacao1 = document.getElementById("score1")
-                pontuacao1.textContent = p1
+            
+            else if (this.contador >= 8) {
+                alert("A partida empatou");
+                this.resetar(0);
+                return;
             }
             else {
-                    vencedor = 1;
-                    p2 += 1
-                    var pontuacao2 = document.getElementById("score2")
-                    pontuacao2.textContent = p2
+                this.alternarVez()
             }
-            alert("O jogador " + vez + " venceu!")
-            return resetar(vencedor)
-        }
-        else if (contador >= 8) {
-            alert("A partida empatou")
-            return resetar(-1)
             
+            this.alterarPlacar(mostrar_vez);
+    
+            this.contador += 1;
         }
+    
         else {
-        
-        if (vez === 0) {
-            vez = 1;
+            alert("Essa jogada nao é possivel")
         }
+    }
+
+    verificarJogadaPossivel(posicao) {
+        if (posicao.textContent.trim() === "") {
+            return true;
+        }
+        return false;
+    }
+
+    verificarVez(posicao) {
+        if (this.vez === 1) {
+            return this.jogadaBola(posicao);
+        }
+        return this.jogadaX(posicao);
+    }
+    
+    jogadaBola (posicao) {
+        posicao.textContent = "O";
+    }
+
+    jogadaX (posicao) {
+        posicao.textContent = "X";
+    }
+
+    verificarVencedor() {
+        if (
+            (this.checkCels('um','dois','tres')) || (this.checkCels('quatro', 'cinco', 'seis')) || (this.checkCels('sete', 'oito', 'nove')) || 
+            (this.checkCels('um','quatro','sete')) || (this.checkCels('dois','cinco','oito')) || (this.checkCels('tres','seis','nove')) ||
+            (this.checkCels('um','cinco','nove')) || (this.checkCels ('sete','cinco','tres'))
+            
+        ){
+            return true
+        }
+        return false
+    }
+    
+    quemGanhou() {
+        
+        if(this.vez === 1) {
+            this.vencedor = 1;
+            this.jogador1.incrementarPontuacao();
+            var pontuacao1 = document.getElementById("score1")
+            pontuacao1.textContent = this.jogador1.pontuacao;
+        }
+
         else {
-            vez = 0;
-        }}
-        
-        mostrar_vez.textContent = "Vez: Jogador " + vez;
-        contador += 1;
-    
-    }
-    else {
-        alert("Essa jogada nao é possivel")
-    }
-}
-
-    
-
-function resetar(vencedor) {
-    var jogador = document.getElementById("mostra_vez");
-
-
-    //limpar o campo
-    var res1 = document.getElementById('um');
-    res1.textContent = " ";
-
-    var res1 = document.getElementById('dois');
-    res1.textContent = " ";
-    
-    var res1 = document.getElementById('tres');
-    res1.textContent = " ";
-    
-    var res1 = document.getElementById('quatro');
-    res1.textContent = " ";
-    
-    var res1 = document.getElementById('cinco');
-    res1.textContent = " ";
-    
-    var res1 = document.getElementById('seis');
-    res1.textContent = " ";
-    
-    var res1 = document.getElementById('sete');
-    res1.textContent = " ";
-    
-    var res1 = document.getElementById('oito');
-    res1.textContent = " ";
-    
-    var res1 = document.getElementById('nove');
-    res1.textContent = " ";
-    
-    contador = 0;
-
-    if (vencedor === 0) {
-        jogador.textContent = "Vez: Jogador " + vencedor;
-        vez = vencedor
-    }
-    else if (vencedor === 1){
-
-        jogador.textContent = "Vez: Jogador " + vencedor;
-        vez = vencedor
-
-    }
-    else if (vencedor === -1) {
-        if (vez === 0) {
-            vez = 1;
+            this.vencedor = 2;
+            this.jogador2.incrementarPontuacao();
+            const pontuacao2 = document.getElementById("score2")
+            pontuacao2.textContent = this.jogador2.pontuacao;
         }
-        else {
-            vez = 0;
-        }
-        jogador.textContent = "Vez: Jogador: " + vez;
-    }
-
-}
-
-
-
-
-function verificarVencedor() {
-    if (
-        (checkCels('um','dois','tres')) || (checkCels('quatro', 'cinco', 'seis')) || (checkCels('sete', 'oito', 'nove')) || 
-        (checkCels('um','quatro','sete')) || (checkCels('dois','cinco','oito')) || (checkCels('tres','seis','nove')) ||
-        (checkCels('um','cinco','nove')) || (checkCels ('sete','cinco','tres'))
         
-    ) {
-        return true
+        alert("O jogador " + this.vez + " venceu!")
+        this.resetar(this.vencedor);
+        return;
     }
-    return false
     
+    alternarVez() {
+        if (this.vez === 1) {
+            this.vez = 2;
+            return;
+        }
+        this.vez = 1;
+        return;
+    }
+    
+    checkCels(c1, c2, c3) {
+        const cel1 = document.getElementById(c1).textContent;
+        const cel2 = document.getElementById(c2).textContent;
+        const cel3 = document.getElementById(c3).textContent;
+        
+        return ((cel1 === cel2 && cel2 === cel3) && (cel1 !== " " && cel2 !== " " && cel3 !== " "));
+    }
+    
+    alterarPlacar (mostrar_vez) {
+        mostrar_vez.textContent = "Vez: Jogador " + this.vez;
+    }
+
+    
+    resetar(vencedor) {
+        const jogador = document.getElementById("mostra_vez");
+        const celulas = ['um', 'dois', 'tres', 'quatro', 'cinco', 'seis','sete', 'oito', 'nove']
+    
+        for (let i=0; i<9; i++)  {
+            var res1 = document.getElementById(celulas[i]);
+            res1.textContent = " ";
+        }
+       
+        this.contador = 0;
+    
+        this.vencedorDaRodada(vencedor, jogador);
+    }
+    
+    vencedorDaRodada(vencedor, jogador) {
+        if (this.vencedor === 1) {
+            jogador.textContent = "Vez: Jogador " + vencedor;
+            this.vez = vencedor;
+        }
+        else if (vencedor === 2){
+    
+            jogador.textContent = "Vez: Jogador " + vencedor;
+            this.vez = vencedor;
+    
+        }
+        else if (this.vencedor === 0) {
+            this.alternarVez()
+            this.alterarPlacar(jogador)
+        }    
+    }
 }
 
-function checkCels(c1, c2, c3) {
-    const cel1 = document.getElementById(c1).textContent;
-    const cel2 = document.getElementById(c2).textContent;
-    const cel3 = document.getElementById(c3).textContent;
+class Jogador {
+    constructor() {
+        this.nome = "nome"; //falta imprementar
+        this.pontuacao = 0;
+    }
 
-    return ((cel1 === cel2 && cel2 === cel3) && (cel1 !== " " && cel2 !== " " && cel3 !== " "));
+    trocarNomeTela(id)
+    {
+        const trocarNome = document.getElementById(id)
+        trocarNome.textContent = this.nome;
+
+    }  
+
+
+    incrementarPontuacao() {
+        this.pontuacao += 1;
+    }
 }
+
+
+const player1 = new Jogador();
+const player2 = new Jogador();
+const jogo = new JogoDaVelha(player1, player2);
